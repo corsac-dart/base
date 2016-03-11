@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   dotenv: "^0.1.3+3"
+  corsac_console:
+    git: https://github.com/corsac-dart/console.git
   corsac_di:
     git: https://github.com/corsac-dart/di.git
   corsac_kernel:
@@ -19,4 +21,6 @@ dependencies:
       ref: refactor
 
 dev_dependencies:
+  corsac_dto:
+    git: https://github.com/corsac-dart/dto.git
   test: "^0.12.6+1"
