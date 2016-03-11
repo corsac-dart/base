@@ -2,26 +2,17 @@
 library corsac_base.test;
 
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:mirrors';
 
 import 'package:corsac_console/corsac_console.dart';
-import 'package:corsac_dto/corsac_dto.dart';
 import 'package:corsac_kernel/corsac_kernel.dart';
-import 'package:corsac_stateless/corsac_stateless.dart';
 import 'package:corsac_stateless/di.dart';
 
-part 'src/test/fixtures.dart';
 part 'src/test/test_tools.dart';
 
 class TestKernelModule extends KernelModule {
-  @override
-  Map getServiceConfiguration(String environment) {
-    return {
-      'test_tools.commands': DI.add([DI.get(FixturesCommand)]),
-    };
-  }
+  final Iterable<Object> fixtures;
+
+  TestKernelModule(this.fixtures);
 
   @override
   Future initialize(Kernel kernel) {
@@ -30,8 +21,14 @@ class TestKernelModule extends KernelModule {
       kernel.container.addMiddleware(new InMemoryRepositoryDIMiddleware());
     }
 
-    // TODO: Load fixtures
+    return loadFixtures(kernel);
+  }
 
-    return new Future.value();
+  Future loadFixtures(Kernel kernel) {
+    return kernel.execute(() {
+      for (var obj in fixtures) {
+        //
+      }
+    });
   }
 }
