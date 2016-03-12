@@ -3,11 +3,10 @@ library corsac_base.tests.functions;
 import 'dart:mirrors';
 
 import 'package:corsac_base/corsac_base.dart';
-import 'package:test/test.dart';
 import 'package:dotenv/dotenv.dart' as dotenv;
-import 'dart:async';
+import 'package:test/test.dart';
 
-Future main() {
+void main() {
   var bootstrap = new Bootstrap();
   var libPath =
       currentMirrorSystem().findLibrary(#corsac_base.tests.functions).uri.path;
