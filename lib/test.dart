@@ -3,11 +3,8 @@ library corsac_base.test;
 
 import 'dart:async';
 
-import 'package:corsac_console/corsac_console.dart';
 import 'package:corsac_kernel/corsac_kernel.dart';
 import 'package:corsac_stateless/di.dart';
-
-part 'src/test/test_tools.dart';
 
 class TestKernelModule extends KernelModule {
   @override

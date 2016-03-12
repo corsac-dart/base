@@ -1,44 +1,102 @@
 part of corsac_base;
 
+/// Bootstraps the project.
+///
+/// This is main entry point which should be used in executable scripts to
+/// initialize and run project's applications.
 class Bootstrap {
   /// Name of environment variable defining project environment.
-  final String projectEnvVarname = 'PROJECT_ENV';
+  final String environmentVarname = 'PROJECT_ENV';
 
-  final String projectConfigFilename = 'parameters.yaml';
+  /// Name of configuration file.
+  final String parametersFilename = 'parameters.yaml';
 
+  /// Kernel module for domain layer.
   final KernelModule domainModule = new DomainKernelModule();
 
   final List<KernelModule> infrastructureModules = [];
 
-  Future<Kernel> buildKernel(String projectRoot,
-      {List<KernelModule> applicationModules: const []}) {
-    if (!dotenv.env.containsKey(projectEnvVarname) &&
+  /// Builds this project's Kernel.
+  Future<Kernel> buildKernel(
+      {List<KernelModule> applicationModules: const [], String projectRoot}) {
+    projectRoot ??= findProjectRoot(Platform.script.path);
+
+    if (!dotenv.env.containsKey(environmentVarname) &&
         new File('${projectRoot}/.env').existsSync()) {
       // Only load dotenv if project environment is not yet defined in the
       // system environment variables.
       dotenv.load('${projectRoot}/.env');
     }
-    String environment = dotenv.env[projectEnvVarname];
+    String environment = dotenv.env[environmentVarname];
 
-    // var infrastructure = new TwitterExtensionInfrastructureModule();
     List<KernelModule> modules = [domainModule];
     modules.addAll(infrastructureModules);
     modules.addAll(applicationModules);
 
+    // TODO: add loggers.
     // _logger.info('Initializing project with `${environment}` environment.');
     // _logger.info('Using ${projectRoot} as project root.');
 
-    var parameters = loadParameters(projectRoot, projectConfigFilename);
-    parameters['project_root'] = projectRoot;
-    parameters['environment'] = environment;
-    //
-    // String levelName = parameters['logging.level'];
-    // Logger.root.level =
-    //     Level.LEVELS.firstWhere((_) => _.name == levelName.toUpperCase());
+    var parameters = loadParameters(projectRoot, parametersFilename);
+    parameters['project.root'] = projectRoot;
+    parameters['project.environment'] = environment;
+
     return Kernel.build(environment, parameters, modules);
   }
 
   Map loadParameters(String projectRoot, String filename) {
     return {}; // TODO: actually load parameters
+  }
+
+  /// Finds project root folder.
+  ///
+  /// Project root folder serves as a single point of reference to any resources
+  /// or assets you wish to store, access and/or distribute with your project.
+  ///
+  /// The only required asset by default is a parameters file.
+  ///
+  /// Detection of project root is based on location of parameters file.
+  /// If `{root}` is a root folder of this project then configuration file may be
+  /// located in following destinations (in order of priority):
+  ///
+  /// * `{root}/parameters.yaml` (in the root folder itself, recommended).
+  /// * `{root}/config/parameters.yaml` (in a `config` subfolder).
+  ///
+  /// This function will try to locate project root based on the path of
+  /// the script being executed. The algorithm is as follows:
+  ///
+  /// 1. Start from the folder where executable is located and assign it to `{root}`.
+  /// 2. Check `{root}/parameters.yaml` and `{root}/config/parameters.yaml`.
+  /// 3. If configuration file is found return current value of `{root}`.
+  /// 4. If configuration is not found, go up one level and assign new value to `{root}`.
+  /// 5. Repeat steps 2-4 until root folder is found or we reached the root of file
+  ///   system. In later case `StateError` will be thrown.
+  String findProjectRoot(String scriptPath) {
+    var uri = new Uri.file(scriptPath, windows: Platform.isWindows);
+    var segments = uri.pathSegments.toList();
+    while (segments.isNotEmpty) {
+      segments.removeLast();
+
+      var candidate = new List.from(segments);
+      candidate.addAll([parametersFilename]);
+      var candidateUri = uri.replace(pathSegments: candidate);
+      if (new File.fromUri(candidateUri).existsSync()) {
+        return uri
+                .replace(pathSegments: segments)
+                .toFilePath(windows: Platform.isWindows) +
+            Platform.pathSeparator;
+      }
+      candidate = new List.from(segments);
+      candidate.addAll(['config', parametersFilename]);
+      candidateUri = uri.replace(pathSegments: candidate);
+      if (new File.fromUri(candidateUri).existsSync()) {
+        return uri
+                .replace(pathSegments: segments)
+                .toFilePath(windows: Platform.isWindows) +
+            Platform.pathSeparator;
+      }
+    }
+    throw new StateError(
+        'Could not locate project root from path ${scriptPath}. ${parametersFilename} does not exist.');
   }
 }
