@@ -16,6 +16,7 @@ class Bootstrap {
 
   /// List of kernel modules for infrastructure layer.
   final List<KernelModule> infrastructureModules = [
+    new ConsoleInitializeKernelModule(),
     new RepositoryKernelModule()
   ];
 

@@ -23,3 +23,11 @@ class RepositoryKernelModule extends KernelModule {
     return new Future.value();
   }
 }
+
+/// Kernel module which initializes project's console app.
+class ConsoleInitializeKernelModule extends KernelModule {
+  @override
+  Map getServiceConfiguration(String environment) {
+    return {'console.commands': [],};
+  }
+}
