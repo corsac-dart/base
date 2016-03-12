@@ -25,11 +25,12 @@ class Bootstrap {
       {List<KernelModule> applicationModules: const [], String projectRoot}) {
     projectRoot ??= findProjectRoot(Platform.script.path);
 
+    var dotenvFilename = '${projectRoot}.env';
     if (!dotenv.env.containsKey(environmentVarname) &&
-        new File('${projectRoot}/.env').existsSync()) {
+        new File(dotenvFilename).existsSync()) {
       // Only load dotenv if project environment is not yet defined in the
       // system environment variables.
-      dotenv.load('${projectRoot}/.env');
+      dotenv.load(dotenvFilename);
     }
     String environment = dotenv.env[environmentVarname];
     if (environment == null || environment.isEmpty) {
