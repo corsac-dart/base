@@ -11,10 +11,13 @@ class Bootstrap {
   /// Name of configuration file.
   final String parametersFilename = 'parameters.yaml';
 
-  /// Kernel module for domain layer.
-  final KernelModule domainModule = new DomainKernelModule();
+  /// List of kernel modules for domain layer.
+  final List<KernelModule> domainModules = [];
 
-  final List<KernelModule> infrastructureModules = [];
+  /// List of kernel modules for infrastructure layer.
+  final List<KernelModule> infrastructureModules = [
+    new RepositoryKernelModule()
+  ];
 
   /// Builds this project's Kernel.
   Future<Kernel> buildKernel(
@@ -28,8 +31,12 @@ class Bootstrap {
       dotenv.load('${projectRoot}/.env');
     }
     String environment = dotenv.env[environmentVarname];
+    if (environment == null || environment.isEmpty) {
+      throw new StateError('Environment for project is not set.');
+    }
 
-    List<KernelModule> modules = [domainModule];
+    List<KernelModule> modules = [];
+    modules.addAll(domainModules);
     modules.addAll(infrastructureModules);
     modules.addAll(applicationModules);
 

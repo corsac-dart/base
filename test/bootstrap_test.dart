@@ -4,15 +4,19 @@ import 'dart:mirrors';
 
 import 'package:corsac_base/corsac_base.dart';
 import 'package:test/test.dart';
+import 'package:dotenv/dotenv.dart' as dotenv;
+import 'dart:async';
 
-void main() {
+Future main() {
+  var bootstrap = new Bootstrap();
+  var libPath =
+      currentMirrorSystem().findLibrary(#corsac_base.tests.functions).uri.path;
+  var defaultScriptPath =
+      libPath.replaceFirst('bootstrap_test.dart', 'fixtures/in_root/run.dart');
+  var badScriptPath =
+      libPath.replaceFirst('bootstrap_test.dart', 'fixtures/in_sub/run.dart');
+
   group('Bootstrap.findProjectRoot:', () {
-    var bootstrap = new Bootstrap();
-    var libPath = currentMirrorSystem()
-        .findLibrary(#corsac_base.tests.functions)
-        .uri
-        .path;
-
     test('it finds project root with config in the same folder', () {
       var path = libPath.replaceFirst(
           'bootstrap_test.dart', 'fixtures/in_root/run.dart');
@@ -32,6 +36,33 @@ void main() {
       expect(() {
         bootstrap.findProjectRoot(path);
       }, throwsStateError);
+    });
+  });
+
+  group('Bootstrap.buildKernel:', () {
+    tearDown(() {
+      dotenv.clean();
+    });
+
+    test('it builds kernel', () async {
+      var root = bootstrap.findProjectRoot(defaultScriptPath);
+      var kernel = await bootstrap.buildKernel(projectRoot: root);
+      expect(kernel, new isInstanceOf<Kernel>());
+      expect(kernel.environment, 'local');
+    });
+
+    test('it requires environment be not empty', () {
+      var root = bootstrap.findProjectRoot(badScriptPath);
+      expect(() {
+        return bootstrap.buildKernel(projectRoot: root);
+      }, throwsStateError);
+    });
+
+    test('it sets environment and project root entries in container', () async {
+      var root = bootstrap.findProjectRoot(defaultScriptPath);
+      var kernel = await bootstrap.buildKernel(projectRoot: root);
+      expect(kernel.get('project.root'), root);
+      expect(kernel.get('project.environment'), 'local');
     });
   });
 }

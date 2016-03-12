@@ -8,6 +8,7 @@ import 'package:corsac_stateless/corsac_stateless.dart';
 import 'package:corsac_stateless/di.dart';
 import 'package:dotenv/dotenv.dart' as dotenv;
 
+export 'package:corsac_kernel/corsac_kernel.dart' show Kernel, KernelModule;
+
 part 'src/bootstrap.dart';
-part 'src/functions.dart';
 part 'src/modules.dart';

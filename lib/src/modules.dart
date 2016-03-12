@@ -7,7 +7,7 @@ part of corsac_base;
 /// * registers IdentityMap with project's kernel. It uses `ZoneLocalIdentityMap`.
 /// * registers container middleware which decorates all repositories with
 ///   `IdentityMapRepositoryDecorator` which implements IdentityMap caching.
-class DomainKernelModule extends KernelModule {
+class RepositoryKernelModule extends KernelModule {
   @override
   Map getServiceConfiguration(String environment) {
     return {
