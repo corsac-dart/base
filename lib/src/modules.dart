@@ -22,6 +22,11 @@ class RepositoryKernelModule extends KernelModule {
     kernel.container.addMiddleware(kernel.get(IdentityMapDIMiddleware));
     return new Future.value();
   }
+
+  Map initializeTask(Kernel kernel) {
+    ZoneLocalIdentityMap identityMap = kernel.get(IdentityMap);
+    return identityMap.zoneValues;
+  }
 }
 
 /// Kernel module which initializes project's console app.
