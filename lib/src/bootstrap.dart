@@ -30,8 +30,10 @@ class Bootstrap {
         new File(dotenvFilename).existsSync()) {
       // Only load dotenv if project environment is not yet defined in the
       // system environment variables.
+      Logger.root.info('dotenv file found, loading environment.');
       dotenv.load(dotenvFilename);
     }
+
     String environment = dotenv.env[environmentVarname];
     if (environment == null || environment.isEmpty) {
       throw new StateError('Environment for project is not set.');
@@ -42,9 +44,8 @@ class Bootstrap {
     modules.addAll(infrastructureModules);
     modules.addAll(applicationModules);
 
-    // TODO: add loggers.
-    // _logger.info('Initializing project with `${environment}` environment.');
-    // _logger.info('Using ${projectRoot} as project root.');
+    Logger.root.info('Initializing project with `${environment}` environment.');
+    Logger.root.info('Using ${projectRoot} as project root.');
 
     var parameters = loadParameters(projectRoot, parametersFilename);
     parameters['project.root'] = projectRoot;
@@ -53,8 +54,22 @@ class Bootstrap {
     return Kernel.build(environment, parameters, modules);
   }
 
+  /// Loads parameters file.
+  ///
+  /// Only `yaml` format supported.
   Map loadParameters(String projectRoot, String filename) {
-    return {}; // TODO: actually load parameters
+    File confFile = new File('${projectRoot}${filename}');
+
+    if (!confFile.existsSync()) {
+      confFile = new File('${projectRoot}config/${filename}');
+      if (!confFile.existsSync())
+        throw new StateError('Parameters file ${confFile} does not exist.');
+    }
+
+    YamlMap yamlParameters = loadYaml(confFile.readAsStringSync());
+    Map parameters = new Map.from(yamlParameters.value);
+
+    return parameters;
   }
 
   /// Finds project root folder.

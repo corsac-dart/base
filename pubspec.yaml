@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   dotenv: "^0.1.3+3"
+  yaml: "^2.1.7"
   corsac_console:
     git: https://github.com/corsac-dart/console.git
   corsac_di:
