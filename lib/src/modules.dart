@@ -1,12 +1,13 @@
 part of corsac_base;
 
 /// Base (default) implementation of kernel module responsible for configuring
-/// Domain layer of the project.
+/// Repository layer of the project.
 ///
 /// This module does a couple things:
 /// * registers IdentityMap with project's kernel. It uses `ZoneLocalIdentityMap`.
 /// * registers container middleware which decorates all repositories with
-///   `IdentityMapRepositoryDecorator` which implements IdentityMap caching.
+///   `IdentityMapRepositoryDecorator` which implements IdentityMap caching on top
+///   of entity repositories.
 class RepositoryKernelModule extends KernelModule {
   @override
   Map getServiceConfiguration(String environment) {
@@ -23,6 +24,7 @@ class RepositoryKernelModule extends KernelModule {
     return new Future.value();
   }
 
+  @override
   Map initializeTask(Kernel kernel) {
     ZoneLocalIdentityMap identityMap = kernel.get(IdentityMap);
     return identityMap.zoneValues;
