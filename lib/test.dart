@@ -10,6 +10,8 @@ import 'package:test/test.dart' as t;
 
 import 'corsac_base.dart';
 
+export 'package:test/test.dart' hide test;
+
 /// Kernel module for test environments.
 /// Adds container middleware which replaces all repositories with
 /// in-memory implementations.
