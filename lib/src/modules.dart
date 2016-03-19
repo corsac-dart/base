@@ -30,11 +30,3 @@ class RepositoryKernelModule extends KernelModule {
     return identityMap.zoneValues;
   }
 }
-
-/// Kernel module which initializes project's console app.
-class ConsoleInitializeKernelModule extends KernelModule {
-  @override
-  Map getServiceConfiguration(String environment) {
-    return {'console.commands': [],};
-  }
-}
