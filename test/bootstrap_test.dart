@@ -1,4 +1,4 @@
-library corsac_base.tests.functions;
+library corsac_bootstrap.tests.functions;
 
 import 'dart:mirrors';
 
@@ -8,8 +8,10 @@ import 'package:test/test.dart';
 
 void main() {
   var bootstrap = new Bootstrap();
-  var libPath =
-      currentMirrorSystem().findLibrary(#corsac_base.tests.functions).uri.path;
+  var libPath = currentMirrorSystem()
+      .findLibrary(#corsac_bootstrap.tests.functions)
+      .uri
+      .path;
   var defaultScriptPath =
       libPath.replaceFirst('bootstrap_test.dart', 'fixtures/in_root/run.dart');
   var badScriptPath =

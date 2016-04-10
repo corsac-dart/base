@@ -1,5 +1,5 @@
 /// Testing features for Corsac projects.
-library corsac_base.test;
+library corsac_bootstrap.test;
 
 import 'dart:async';
 import 'dart:mirrors';
@@ -8,7 +8,7 @@ import 'package:corsac_kernel/corsac_kernel.dart';
 import 'package:corsac_dal/di.dart';
 import 'package:test/test.dart' as t;
 
-import 'corsac_bootstrap.dart';
+import 'package:corsac_bootstrap/corsac_bootstrap.dart';
 
 export 'package:test/test.dart' hide test;
 
