@@ -2,7 +2,7 @@ library corsac_base.tests.functions;
 
 import 'dart:mirrors';
 
-import 'package:corsac_base/corsac_base.dart';
+import 'package:corsac_bootstrap/corsac_bootstrap.dart';
 import 'package:dotenv/dotenv.dart' as dotenv;
 import 'package:test/test.dart';
 

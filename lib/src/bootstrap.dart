@@ -1,4 +1,4 @@
-part of corsac_base;
+part of corsac_bootstrap;
 
 /// Bootstraps the project.
 ///
@@ -65,7 +65,8 @@ class Bootstrap {
         throw new StateError('Parameters file ${confFile} does not exist.');
     }
 
-    YamlMap yamlParameters = loadYaml(confFile.readAsStringSync());
+    YamlMap yamlParameters =
+        loadYaml(confFile.readAsStringSync()) ?? new YamlMap.wrap({});
     Map parameters = new Map.from(yamlParameters.value);
 
     return parameters;

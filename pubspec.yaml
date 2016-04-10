@@ -1,7 +1,7 @@
-name: corsac_base
+name: corsac_bootstrap
 version: 0.1.0-dev
-description: Common utilities for Corsac projects
-homepage: https://github.com/corsac-dart/base
+description: Bootstrap for Corsac projects
+homepage: https://github.com/corsac-dart/bootstrap
 author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
 
 environment:
@@ -16,12 +16,8 @@ dependencies:
     git: https://github.com/corsac-dart/di.git
   corsac_kernel:
     git: https://github.com/corsac-dart/kernel.git
-  corsac_stateless:
-    git:
-      url: https://github.com/corsac-dart/stateless.git
-      ref: refactor
-  corsac_dto:
-    git: https://github.com/corsac-dart/dto.git
+  corsac_dal:
+    git: https://github.com/corsac-dart/dal.git
 
 dev_dependencies:
   test: "^0.12.6+1"

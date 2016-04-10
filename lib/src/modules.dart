@@ -1,4 +1,4 @@
-part of corsac_base;
+part of corsac_bootstrap;
 
 /// Base (default) implementation of kernel module responsible for configuring
 /// Repository layer of the project.

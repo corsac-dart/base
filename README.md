@@ -1,3 +1,3 @@
-# Common utilities for Corsac projects
+# Bootstrap for Corsac projects
 
 WIP

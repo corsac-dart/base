@@ -5,10 +5,10 @@ import 'dart:async';
 import 'dart:mirrors';
 
 import 'package:corsac_kernel/corsac_kernel.dart';
-import 'package:corsac_stateless/di.dart';
+import 'package:corsac_dal/di.dart';
 import 'package:test/test.dart' as t;
 
-import 'corsac_base.dart';
+import 'corsac_bootstrap.dart';
 
 export 'package:test/test.dart' hide test;
 
