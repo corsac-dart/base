@@ -7,7 +7,7 @@ const _ENV = 'CORSAC_ENV';
 ///
 /// This is the main entry point which should be used in executable scripts to
 /// initialize and run project's applications if needed.
-class Bootstrap {
+class CorsacBootstrap {
   /// The name of project.
   String projectName = 'project_name';
 

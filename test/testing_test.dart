@@ -5,7 +5,7 @@ import 'package:dotenv/dotenv.dart' as dotenv;
 
 void main() {
   group('test wrapper:', () {
-    var bootstrap = new Bootstrap();
+    var bootstrap = new CorsacBootstrap();
     bootstrap.logLevel = Level.OFF;
 
     setUp(() {

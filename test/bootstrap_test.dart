@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 import 'package:logging/logging.dart';
 
 void main() {
-  var bootstrap = new Bootstrap();
+  var bootstrap = new CorsacBootstrap();
   bootstrap.logLevel = Level.OFF;
   var libPath = currentMirrorSystem()
       .findLibrary(#corsac_bootstrap.tests.functions)
@@ -19,7 +19,7 @@ void main() {
   var badProjectRoot =
       libPath.replaceFirst('bootstrap_test.dart', 'fixtures/in_sub/');
 
-  group('Bootstrap.buildKernel:', () {
+  group('CorsacBootstrap.buildKernel:', () {
     tearDown(() {
       dotenv.clean();
     });

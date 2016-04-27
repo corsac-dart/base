@@ -28,7 +28,7 @@ export 'package:test/test.dart' hide test;
 /// If body has no parameters then behavior of this function is the same as the
 /// original one so it will act as a proxy.
 test(description, Function body,
-    {Bootstrap bootstrap,
+    {CorsacBootstrap bootstrap,
     String testOn,
     t.Timeout timeout,
     skip,
