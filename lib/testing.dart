@@ -1,11 +1,13 @@
 /// Testing utilities for Corsac projects.
 library corsac_bootstrap.testing;
 
+import 'dart:io';
 import 'dart:mirrors';
 
 import 'package:corsac_bootstrap/corsac_bootstrap.dart';
 import 'package:test/test.dart' as t;
 
+export 'package:corsac_bootstrap/corsac_bootstrap.dart';
 export 'package:test/test.dart' hide test;
 
 /// Creates a new test case with given description (converted to a string) and
@@ -37,7 +39,8 @@ test(description, Function body,
     t.test(description, body);
   } else {
     t.test(description, () async {
-      var kernel = await bootstrap.buildKernel();
+      var kernel =
+          await bootstrap.buildKernel(projectRoot: _findTestProjectRoot());
       var f = kernel.execute(body);
       t.expect(f, t.completes);
     },
@@ -47,4 +50,29 @@ test(description, Function body,
         tags: tags,
         onPlatform: onPlatform);
   }
+}
+
+/// Resolves project root when running tests.
+///
+/// This handles how `test` package runs tests in isolates.
+String _findTestProjectRoot() {
+  var src = Uri.decodeFull(Platform.script.path);
+  var regex =
+      new RegExp('import \"file:\/\/([^\"]+)\" as test', multiLine: true);
+  var rootSegments;
+  Uri scriptUri;
+  if (regex.hasMatch(src)) {
+    // We are running via test package's dedicated binary.
+    scriptUri = new Uri.file(regex.allMatches(src).first.group(1));
+    rootSegments =
+        scriptUri.pathSegments.takeWhile((seg) => seg != 'test').toList();
+  } else {
+    // We are running via normal command line execution bypassing test package.
+    scriptUri = new Uri.file(Platform.script.path);
+    rootSegments =
+        scriptUri.pathSegments.takeWhile((seg) => seg != 'test').toList();
+  }
+
+  return scriptUri.replace(pathSegments: rootSegments).path +
+      Platform.pathSeparator;
 }

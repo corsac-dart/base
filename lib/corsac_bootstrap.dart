@@ -15,6 +15,7 @@ import 'package:yaml/yaml.dart';
 export 'package:corsac_dal/corsac_dal.dart';
 export 'package:corsac_di/corsac_di.dart';
 export 'package:corsac_kernel/corsac_kernel.dart' show Kernel, KernelModule;
+export 'package:logging/logging.dart';
 
 part 'src/apps.dart';
 part 'src/bootstrap.dart';
