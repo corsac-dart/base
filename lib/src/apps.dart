@@ -5,7 +5,7 @@ typedef Future startApp();
 class AppSupervisor {
   final apps;
 
-  Set<Future<Isolate>> isolates;
+  Map<String, Set<Future<Isolate>>> isolates;
 
   AppSupervisor(this.apps);
 
@@ -25,3 +25,11 @@ class AppSupervisor {
     return null;
   }
 }
+
+class AppConfig {
+  final int instances;
+
+  AppConfig(this.instances);
+}
+
+typedef Future RunApp(int instanceId, AppConfig config);

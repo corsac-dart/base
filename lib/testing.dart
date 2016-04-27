@@ -1,30 +1,12 @@
-/// Testing features for Corsac projects.
-library corsac_bootstrap.test;
+/// Testing utilities for Corsac projects.
+library corsac_bootstrap.testing;
 
-import 'dart:async';
 import 'dart:mirrors';
 
-import 'package:corsac_kernel/corsac_kernel.dart';
-import 'package:corsac_dal/di.dart';
+import 'package:corsac_bootstrap/corsac_bootstrap.dart';
 import 'package:test/test.dart' as t;
 
-import 'package:corsac_bootstrap/corsac_bootstrap.dart';
-
 export 'package:test/test.dart' hide test;
-
-/// Kernel module for test environments.
-/// Adds container middleware which replaces all repositories with
-/// in-memory implementations.
-class TestKernelModule extends KernelModule {
-  @override
-  Future initialize(Kernel kernel) {
-    if (kernel.environment == 'test') {
-      // Register in-memory implementations for repository layer.
-      kernel.container.addMiddleware(new InMemoryRepositoryDIMiddleware());
-    }
-    return new Future.value();
-  }
-}
 
 /// Creates a new test case with given description (converted to a string) and
 /// body.
