@@ -4,6 +4,7 @@ library corsac_bootstrap.testing;
 import 'dart:io';
 import 'dart:mirrors';
 
+import 'package:dotenv/dotenv.dart' as dotenv;
 import 'package:corsac_bootstrap/corsac_bootstrap.dart';
 import 'package:test/test.dart' as t;
 
@@ -39,6 +40,7 @@ test(description, Function body,
     t.test(description, body);
   } else {
     t.test(description, () async {
+      _loadEnvironment();
       var kernel =
           await bootstrap.buildKernel(projectRoot: _findTestProjectRoot());
       var f = kernel.execute(body);
@@ -50,6 +52,15 @@ test(description, Function body,
         tags: tags,
         onPlatform: onPlatform);
   }
+}
+
+void _loadEnvironment() {
+  dotenv.clean();
+  var env = Platform.environment['CORSAC_ENV'] ?? 'test';
+  if (env == 'integration') {
+    dotenv.load(_findTestProjectRoot() + '.env');
+  }
+  dotenv.env['CORSAC_ENV'] = env; // override whatever was set in the .env file.
 }
 
 /// Resolves project root when running tests.
