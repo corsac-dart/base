@@ -57,9 +57,7 @@ test(description, Function body,
 void _loadEnvironment() {
   dotenv.clean();
   var env = Platform.environment['CORSAC_ENV'] ?? 'test';
-  if (env == 'integration') {
-    dotenv.load(_findTestProjectRoot() + '.env');
-  }
+  dotenv.load(_findTestProjectRoot() + '.env');
   dotenv.env['CORSAC_ENV'] = env; // override whatever was set in the .env file.
 }
 
