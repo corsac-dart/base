@@ -42,7 +42,7 @@ test(description, Function body,
     t.test(description, () async {
       _loadEnvironment();
       var kernel =
-          await bootstrap.buildKernel(projectRoot: _findTestProjectRoot());
+          await bootstrap.buildKernel(projectRoot: findTestProjectRoot());
       var f = kernel.execute(body);
       t.expect(f, t.completes);
     },
@@ -57,31 +57,36 @@ test(description, Function body,
 void _loadEnvironment() {
   dotenv.clean();
   var env = Platform.environment['CORSAC_ENV'] ?? 'test';
-  dotenv.load(_findTestProjectRoot() + '.env');
+  dotenv.load(findTestProjectRoot() + '.env');
   dotenv.env['CORSAC_ENV'] = env; // override whatever was set in the .env file.
 }
 
 /// Resolves project root when running tests.
 ///
 /// This handles how `test` package runs tests in isolates.
-String _findTestProjectRoot() {
-  var src = Uri.decodeFull(Platform.script.path);
+String findTestProjectRoot({String scriptPath}) {
+  scriptPath ??= Platform.script.path;
+  var src = Uri.decodeFull(scriptPath);
   var regex =
       new RegExp('import \"file:\/\/([^\"]+)\" as test', multiLine: true);
   var rootSegments;
   Uri scriptUri;
   if (regex.hasMatch(src)) {
     // We are running via test package's dedicated binary.
-    scriptUri = new Uri.file(regex.allMatches(src).first.group(1));
+    scriptUri =
+        new Uri.file(Uri.decodeFull(regex.allMatches(src).first.group(1)));
     rootSegments =
         scriptUri.pathSegments.takeWhile((seg) => seg != 'test').toList();
   } else {
     // We are running via normal command line execution bypassing test package.
-    scriptUri = new Uri.file(Platform.script.path);
+    scriptUri =
+        new Uri.file(Uri.decodeFull(regex.allMatches(src).first.group(1)));
     rootSegments =
         scriptUri.pathSegments.takeWhile((seg) => seg != 'test').toList();
   }
 
-  return scriptUri.replace(pathSegments: rootSegments).path +
+  return scriptUri
+          .replace(pathSegments: rootSegments)
+          .toFilePath(windows: Platform.isWindows) +
       Platform.pathSeparator;
 }
