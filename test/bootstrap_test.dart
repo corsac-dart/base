@@ -18,8 +18,10 @@ void main() {
       libPath.replaceFirst('bootstrap_test.dart', 'fixtures/in_root/');
   var badProjectRoot =
       libPath.replaceFirst('bootstrap_test.dart', 'fixtures/in_sub/');
+  var envCheckRoot =
+      libPath.replaceFirst('bootstrap_test.dart', 'fixtures/env_check/');
 
-  group('CorsacBootstrap.buildKernel:', () {
+  group('CorsacBootstrap:', () {
     tearDown(() {
       dotenv.clean();
     });
@@ -40,6 +42,19 @@ void main() {
       var kernel = await bootstrap.buildKernel(projectRoot: projectRoot);
       expect(kernel.get('project.root'), projectRoot);
       expect(kernel.get('project.environment'), 'local');
+    });
+
+    test('it validates environment if .envcheck is present', () {
+      var error;
+      try {
+        bootstrap.buildKernel(projectRoot: envCheckRoot);
+      } on StateError catch (e) {
+        error = e;
+      }
+
+      expect(error, new isInstanceOf<StateError>());
+      expect(error.message,
+          'Environment variables are not set: MUST_BE_PRESENT, THIS_ONE_TOO');
     });
   });
 }

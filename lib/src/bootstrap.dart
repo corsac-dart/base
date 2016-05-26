@@ -31,6 +31,8 @@ class CorsacBootstrap {
       dotenv.load(dotenvFilename);
     }
 
+    validateEnvironment(projectRoot);
+
     String environment = dotenv.env[_ENV];
     if (environment == null || environment.isEmpty) {
       throw new StateError('Environment for project is not set.');
@@ -89,5 +91,22 @@ class CorsacBootstrap {
     Map parameters = new Map.from(yamlParameters.value);
 
     return parameters;
+  }
+
+  /// Validates whether all environment variables are set for this project.
+  /// Depends on special `.envcheck` file which is just a simple text file
+  /// where each line contains name of environment variable that must be
+  /// defined.
+  void validateEnvironment(String projectRoot) {
+    File checkFile = new File('${projectRoot}.envcheck');
+
+    if (!checkFile.existsSync()) return;
+    Logger.root.info('Validating environment from .envcheck file.');
+    var vars = checkFile.readAsLinesSync().where((_) => _.trim().isNotEmpty);
+    if (!dotenv.isEveryDefined(vars)) {
+      var missingVars = vars.where((_) => !dotenv.isEveryDefined([_]));
+      throw new StateError(
+          'Environment variables are not set: ' + missingVars.join(', '));
+    }
   }
 }
