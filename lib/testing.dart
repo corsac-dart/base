@@ -79,8 +79,7 @@ String findTestProjectRoot({String scriptPath}) {
         scriptUri.pathSegments.takeWhile((seg) => seg != 'test').toList();
   } else {
     // We are running via normal command line execution bypassing test package.
-    scriptUri =
-        new Uri.file(Uri.decodeFull(regex.allMatches(src).first.group(1)));
+    scriptUri = new Uri.file(scriptPath);
     rootSegments =
         scriptUri.pathSegments.takeWhile((seg) => seg != 'test').toList();
   }

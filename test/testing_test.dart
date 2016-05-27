@@ -20,6 +20,12 @@ void main() {
       var result = findTestProjectRoot(scriptPath: path);
       expect(result, '/Users/anatoly/Personal/Unit tests for Tests/');
     });
+
+    test('it supports test executed directly via vm', () {
+      const path = '/home/user/project/test/my_test.dart';
+      var result = findTestProjectRoot(scriptPath: path);
+      expect(result, '/home/user/project/');
+    });
   });
 }
 
